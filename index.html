@@ -9,9 +9,6 @@
             font-family: Arial, sans-serif;
             margin: 20px;
         }
-        h1 {
-            color: #333;
-        }
         pre {
             background: #f4f4f4;
             padding: 10px;
@@ -20,57 +17,57 @@
     </style>
 </head>
 <body>
-    <h1>Browser and Environment Information</h1>
     <pre id="info"></pre>
 
     <script>
-        function getBrowserInfo() {
-            const userAgent = navigator.userAgent;
-            const platform = navigator.platform;
-            const language = navigator.language;
-            const languages = navigator.languages;
-            const cookieEnabled = navigator.cookieEnabled;
-            const online = navigator.onLine;
-            const javaEnabled = navigator.javaEnabled();
-            const doNotTrack = navigator.doNotTrack;
-            
-            const screenWidth = screen.width;
-            const screenHeight = screen.height;
-            const colorDepth = screen.colorDepth;
-            const pixelDepth = screen.pixelDepth;
+        async function getBrowserPermissions() {
+            const permissions = ['geolocation', 'notifications', 'camera', 'microphone', 'persistent-storage', 'background-sync'];
+            const results = {};
 
-            const windowInnerWidth = window.innerWidth;
-            const windowInnerHeight = window.innerHeight;
-            const windowOuterWidth = window.outerWidth;
-            const windowOuterHeight = window.outerHeight;
-            
-            const timezoneOffset = new Date().getTimezoneOffset();
+            for (let perm of permissions) {
+                try {
+                    const status = await navigator.permissions.query({ name: perm });
+                    results[perm] = status.state;
+                } catch (e) {
+                    results[perm] = 'Permission not supported';
+                }
+            }
+
+            return results;
+        }
+
+        function getOSAndHardwareInfo() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            let os = "Unknown OS";
+
+            if (userAgent.includes("win")) os = "Windows";
+            else if (userAgent.includes("mac")) os = "MacOS";
+            else if (userAgent.includes("linux")) os = "Linux";
+            else if (userAgent.includes("android")) os = "Android";
+            else if (userAgent.includes("iphone") || userAgent.includes("ipad")) os = "iOS";
+
+            const hardwareConcurrency = navigator.hardwareConcurrency || "Unknown";
+
+            return {
+                os,
+                hardwareConcurrency
+            };
+        }
+
+        async function displayInfo() {
+            const userAgent = navigator.userAgent;
+            const url = window.location.href;
+
+            const osAndHardware = getOSAndHardwareInfo();
+            const permissions = await getBrowserPermissions();
 
             const info = {
                 userAgent,
-                platform,
-                language,
-                languages,
-                cookieEnabled,
-                online,
-                javaEnabled,
-                doNotTrack,
-                screenWidth,
-                screenHeight,
-                colorDepth,
-                pixelDepth,
-                windowInnerWidth,
-                windowInnerHeight,
-                windowOuterWidth,
-                windowOuterHeight,
-                timezoneOffset
+                url,
+                ...osAndHardware,
+                permissions
             };
 
-            return info;
-        }
-
-        function displayInfo() {
-            const info = getBrowserInfo();
             const infoElement = document.getElementById('info');
             infoElement.textContent = JSON.stringify(info, null, 4);
         }
