@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser and Environment Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Browser and Environment Information</h1>
+    <pre id="info"></pre>
+
+    <script>
+        function getBrowserInfo() {
+            const userAgent = navigator.userAgent;
+            const platform = navigator.platform;
+            const language = navigator.language;
+            const languages = navigator.languages;
+            const cookieEnabled = navigator.cookieEnabled;
+            const online = navigator.onLine;
+            const javaEnabled = navigator.javaEnabled();
+            const doNotTrack = navigator.doNotTrack;
+            
+            const screenWidth = screen.width;
+            const screenHeight = screen.height;
+            const colorDepth = screen.colorDepth;
+            const pixelDepth = screen.pixelDepth;
+
+            const windowInnerWidth = window.innerWidth;
+            const windowInnerHeight = window.innerHeight;
+            const windowOuterWidth = window.outerWidth;
+            const windowOuterHeight = window.outerHeight;
+            
+            const timezoneOffset = new Date().getTimezoneOffset();
+
+            const info = {
+                userAgent,
+                platform,
+                language,
+                languages,
+                cookieEnabled,
+                online,
+                javaEnabled,
+                doNotTrack,
+                screenWidth,
+                screenHeight,
+                colorDepth,
+                pixelDepth,
+                windowInnerWidth,
+                windowInnerHeight,
+                windowOuterWidth,
+                windowOuterHeight,
+                timezoneOffset
+            };
+
+            return info;
+        }
+
+        function displayInfo() {
+            const info = getBrowserInfo();
+            const infoElement = document.getElementById('info');
+            infoElement.textContent = JSON.stringify(info, null, 4);
+        }
+
+        displayInfo();
+    </script>
+</body>
+</html>
